@@ -1,32 +1,30 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const controller = require('./Controller')
-const get_fixture = require('./get_fixture')
+const db = require('./config/db');
+const  { clubs } = require('./teams.js')
+const { runIngestion } = require('./ingestion');
 
 app.use(cors())
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+db.init();
+
 const PORT = process.env.PORT || 3000;
+
+setInterval(async () => {
+    const teamIds = clubs.map(club => club.code);
+    await runIngestion(teamIds);
+    console.log("Ingestion ran successfully")
+}, 1000 * 60 * 60 * 24); // Run every 24 hours
 
 app.get('/api', (req, res) => {
     res.json({ apiHomeMessage: 'Hello World' })
 })
 
-app.post('/api', async (req, res) => {
-
-    const teams = req.body.teams
-    const teamIds = teams.map(team => team.code)
-    let fixture = []
-    for (let id of teamIds) {
-        fixture.push(await get_fixture.get_team_fixture(id))
-    }
-    console.log(fixture)
-    res.json(fixture)
-
-})
+app.post('/api', db.getDataByTeamIds)
 
 
 app.listen(PORT, () => {
