@@ -25,7 +25,7 @@ async function init() {
     }
 }
 
-// Function to store an array of fixture objects into the database
+// Store an array of fixture objects into the database
 async function storeData(data) {
     try {
         const client = await pool.connect()
@@ -42,7 +42,7 @@ async function storeData(data) {
     }
 }
 
-// Function to get data from the database given an array of team ids
+// Get data from the database given an array of team ids
 async function getDataByTeamIds(req, res) {
     const teamIds = req.body.teams
     try {

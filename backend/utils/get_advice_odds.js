@@ -1,7 +1,7 @@
 require('dotenv').config()
 const axios = require('axios');
 
-const { get_winner_odds, get_double_chance_odds, get_over_under_odds } = require('./helpers/get_odds')
+const { get_winner_odds, get_double_chance_odds, get_over_under_odds } = require('../helpers/get_odds')
 
 const API_HEADERS = {
     'X-RapidAPI-Key': process.env.API_KEY,

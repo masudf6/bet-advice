@@ -1,5 +1,5 @@
 const { get_team_fixture } = require('./get_fixture');
-const { storeData } = require('./config/db');
+const { storeData } = require('../config/db');
 
 const fetchFixtures = async (teamIds) => {
     try {

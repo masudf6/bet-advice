@@ -43,4 +43,8 @@ const get_over_under_odds = (over_under, goals_over_under_odds) => {
     return switchcases[number_of_goals]
 }
 
-module.exports = { get_winner_odds, get_double_chance_odds, get_over_under_odds }
+module.exports = { 
+    get_winner_odds, 
+    get_double_chance_odds, 
+    get_over_under_odds 
+}
