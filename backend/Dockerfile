@@ -6,6 +6,20 @@ FROM node:${NODE_VERSION}-alpine
 # Use production node environment by default.
 ENV NODE_ENV production
 
+# Accept build arguments for database credentials
+ARG POSTGRES_USER
+ARG POSTGRES_PASSWORD
+ARG POSTGRES_HOST
+ARG POSTGRES_PORT
+ARG POSTGRES_DB
+
+# Set the database credentials as environment variables
+ENV POSTGRES_USER=$POSTGRES_USER
+ENV POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+ENV POSTGRES_HOST=$POSTGRES_HOST
+ENV POSTGRES_PORT=$POSTGRES_PORT
+ENV POSTGRES_DB=$POSTGRES_DB
+
 # Directory in docker
 WORKDIR /usr/src/app
 
