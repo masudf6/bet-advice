@@ -1,5 +1,5 @@
 const { get_team_fixture } = require('./get_fixture');
-const { storeData } = require('../config/db');
+const { storeData, deleteData } = require('../db/db');
 
 const fetchFixtures = async (teamIds) => {
     try {
@@ -25,8 +25,10 @@ const saveFixtures = async (fixtures) => {
 
 const runIngestion = async (teamIds) => {
     try {
+        await deleteData()
         const fixtures = await fetchFixtures(teamIds)
         await saveFixtures(fixtures)
+        console.log(fixtures)
     } catch (error) {
         console.error('Error running ingestion:', error)
         throw error

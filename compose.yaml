@@ -1,0 +1,28 @@
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+    environment:
+      NODE_ENV: production
+    ports:
+      - 3000:3000
+    depends_on:
+      - backend
+
+
+  backend:
+    build:
+      context: ./backend
+    environment:
+      NODE_ENV: production
+      POSTGRES_USER: postgres.uihugegfawwiowpxcbyw
+      POSTGRES_PASSWORD: postgrespasspolka
+      POSTGRES_HOST: aws-0-ap-southeast-2.pooler.supabase.com
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: postgres
+    ports:
+      - 8000:8000
+
+
+

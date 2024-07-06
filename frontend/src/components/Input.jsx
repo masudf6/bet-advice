@@ -1,44 +1,51 @@
 import { Autocomplete, Box, Button, TextField } from '@mui/material'
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
-import Fixture from './Fixture'
+import React, { useState } from 'react'
 import topEuropeanClubs from './topEuropeanClubs'
+import filter_input from '../utils/filter_input'
+import Loading from './Loading'
+import Datagrid from './Datagrid'
+// import CombinedOdds from './CombinedOdds'
+// import Fixture from './Fixture'
+const Fixture = React.lazy(() => import('./Fixture'))
 
 const Input = () => {
 
-    const [team, setTeam] = useState()
-    const [rows, setRows] = useState()
+    const existing_session_data = JSON.parse(window.sessionStorage.getItem('fixture'))
 
-    const handleChange = (e, tags) => {
-        const team_input = tags
-        setTeam(team_input)
-    }
+    const [teamInput, setTeamInput] = useState()
+    const [rows, setRows] = useState(existing_session_data || '')
+    const [loading, setLoading] = useState(false)
 
     const handleClick = async () => {
 
-        const res = await axios.post('http://localhost:3000/api', {teams: team})
+        setLoading(true)
+
+        const res = await axios.post('http://localhost:8000/api', {teams: teamInput})
         const fixture = res.data
 
-        // Saving data to session storage to hydrate the app
-        window.sessionStorage.setItem('fixture', JSON.stringify(fixture))
-
-        const session_data = JSON.parse(window.sessionStorage.getItem('fixture'))
-        setRows(session_data)
+        let new_session_data = []
         
-    }
+        if (existing_session_data) {
+            new_session_data = fixture && [...existing_session_data, ...fixture]
+        } else {
+            new_session_data = fixture && [...fixture]
+        }
 
-    useEffect(() => {
-        //render after refresh
+        // Saving data to session storage to hydrate the app
+        window.sessionStorage.setItem('fixture', JSON.stringify(new_session_data))
+
         const session_data = JSON.parse(window.sessionStorage.getItem('fixture'))
-        console.log(session_data)
         setRows(session_data)
-    }, [])
+        setLoading(false)
+        setTeamInput([])
+    }
 
   return (
     <Box textAlign={'center'}>
         <Box marginBottom={'4em'}>
             <Autocomplete
-                sx={{ width: '50%', margin: 'auto', marginBottom: '1em' }}
+                sx={{ margin: 'auto', marginBottom: '1em' }}
                 multiple
                 id="teams"
                 groupBy={(option) => option.league}
@@ -53,12 +60,22 @@ const Input = () => {
                     placeholder="Team Names"
                 />
                 )}
-                onChange={handleChange}
+                onChange={(e, tags) => {
+                    const team_input = tags
+                    const team_input_filtered = filter_input(rows, team_input)
+                    setTeamInput(team_input_filtered)
+                }}
             />
-            <Button variant='contained' color='warning' sx={{width: '50%'}} onClick={handleClick}>Call API</Button>
-            </Box>
-            {!rows? 'Select your teams to get advice' : <Fixture fixture={rows} />}
+            <Button variant='contained' color='warning' sx={{minWidth: '50%'}} onClick={handleClick}>Call API</Button>
         </Box>
+            { loading 
+                ?   <Loading /> : (!rows? 'Select your teams to get advice' 
+                :   <Box>
+                        {/* <Fixture fixture={rows} /> */}
+                        <Datagrid fixture={rows}/>
+                    </Box>
+            )}
+    </Box>
   )
 }
 

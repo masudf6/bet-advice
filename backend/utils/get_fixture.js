@@ -7,6 +7,8 @@ const API_HEADERS = {
     'X-RapidAPI-Host': 'api-football-v1.p.rapidapi.com'
 }
 
+const SEASON = '2024'
+
 
 const get_advice = async (fixture_id) => {
 
@@ -35,7 +37,7 @@ const get_form = async (league_id, team_id) => {
         params: {
           league: league_id,
           team: team_id,
-          season: '2023',
+          season: SEASON,
         },
         headers: API_HEADERS
     }
@@ -47,7 +49,7 @@ const get_form = async (league_id, team_id) => {
         return form
 
     } catch (error) {
-        console.error(error);
+        console.error(error)
     }
 }
 
@@ -58,12 +60,12 @@ const get_team_fixture = async (teamID) => {
         method: 'GET',
         url: 'https://api-football-v1.p.rapidapi.com/v3/fixtures',
         params: {
-            season: '2023',
+            season: SEASON,
             team: teamID,
-            next: '1'
+            next: '1'    //Get only the next 1 fuxture
         },
         headers: API_HEADERS
-    };
+    }
       
     try {
         const res = await axios.request(options);
@@ -77,8 +79,8 @@ const get_team_fixture = async (teamID) => {
         const fixture_id = data.fixture.id
         console.log(fixture_id)
         const advice = await get_advice(fixture_id)
-        const form_home_team = await get_form(league_id, home_team_id)
-        const form_away_team = await get_form(league_id, away_team_id)
+        // const form_home_team = await get_form(league_id, home_team_id)
+        // const form_away_team = await get_form(league_id, away_team_id)
         const odds = await advice_odds.odds(advice, fixture_id, home_team, away_team)
         return {
                     fixture_id,
@@ -90,11 +92,11 @@ const get_team_fixture = async (teamID) => {
                     league,
                     advice, 
                     odds,
-                    form_home_team, 
-                    form_away_team,
+                    // form_home_team, 
+                    // form_away_team,
                 }
     } catch (error) {
-        console.error(error);
+        console.error(error)
     }
 
 }

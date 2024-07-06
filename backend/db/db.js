@@ -5,9 +5,9 @@ require('dotenv').config()
 const pool = new Pool({
     user: process.env.POSTGRES_USER,
     password: process.env.POSTGRES_PASSWORD,
-    host: 'localhost',
-    port: 5432,
-    database: 'fixtures',
+    host: process.env.POSTGRES_HOST,
+    port: process.env.POSTGRES_PORT,
+    database: process.env.POSTGRES_DB,
 })
 
 // Initialize the database
@@ -34,6 +34,7 @@ async function storeData(data) {
 
             // Run the SQL instruction to insert the object into the games table
             await client.query('INSERT INTO games (fixture_id, home_team, away_team, league, league_id, advice, odds, form_home_team, form_away_team, home_team_id, away_team_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)', [fixture_id, home_team, away_team, league, league_id, advice, odds, form_home_team, form_away_team, home_team_id, away_team_id])
+            console.log(item)
         }
         console.log('Data stored successfully')
         client.release()
@@ -43,8 +44,7 @@ async function storeData(data) {
 }
 
 // Get data from the database given an array of team ids
-async function getDataByTeamIds(req, res) {
-    const teamIds = req.body.teams
+async function getDataByTeamIds(teamIds) {
     try {
         const client = await pool.connect()
 
@@ -53,10 +53,22 @@ async function getDataByTeamIds(req, res) {
         const result = await client.query(query, [teamIds])
         console.log('Data fetched successfully')
         client.release()
-        res.json(result.rows)
+        return result.rows
     } catch (err) {
         console.error('Error getting data:', err)
         return {Error: "Error getting data from the database"}
+    }
+}
+
+async function deleteData() {
+    try {
+        const client = await pool.connect()
+        const query = 'TRUNCATE TABLE games'
+        await client.query(query)
+        console.log('Data deleted successfully');
+        client.release()
+    } catch (error) {
+        console.error('Error deleting data: ', error)
     }
 }
 
@@ -64,5 +76,6 @@ async function getDataByTeamIds(req, res) {
 module.exports = {
     init,
     storeData,
-    getDataByTeamIds
+    getDataByTeamIds,
+    deleteData
 }

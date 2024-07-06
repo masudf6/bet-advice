@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Container, CssBaseline, ThemeProvider, createTheme } from '@mui/material';
 import { Navbar } from '../components/Navbar';
+import Footer from '../components/Footer';
 
 const darkTheme = {
   palette: {
@@ -18,10 +19,6 @@ const lightTheme = {
 function Layout({ children }) {
   const [theme, setTheme] = useState(window.sessionStorage.getItem('theme') || 'light')
 
-  // useEffect(() => {
-  //   window.sessionStorage.setItem('theme', theme)
-  // }, [theme])
-
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light'
     window.sessionStorage.setItem('theme', newTheme)
@@ -36,7 +33,8 @@ function Layout({ children }) {
         <Container maxWidth="md">
           <Container container direction="column">
               <Navbar theme={theme} toggleTheme={toggleTheme} />
-              { children }
+                { children }
+              <Footer />
           </Container>
         </Container>
     </ThemeProvider>
