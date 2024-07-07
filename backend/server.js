@@ -7,9 +7,9 @@ const  { clubs } = require('./utils/teams');
 const { runIngestion } = require('./utils/ingestion');
 
 // Allow requests from your frontend
-app.use(cors({
-    origin: 'http://advice-odds.azurewebsites.net' // Adjust to match your frontend domain
-}))
+// app.use(cors({
+//     origin: 'http://your-frontend-domain.com' // Adjust to match your frontend domain
+// }))
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

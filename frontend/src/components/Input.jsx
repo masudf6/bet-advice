@@ -21,7 +21,7 @@ const Input = () => {
 
         setLoading(true)
 
-        const res = await axios.post('http://backend:8000/api', {teams: teamInput})
+        const res = await axios.post('https://advice-odds-api.azurewebsites.net/api', {teams: teamInput})
         const fixture = res.data
 
         let new_session_data = []
