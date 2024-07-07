@@ -6,10 +6,7 @@ const getFixtures = require('./routes/getFixtures');
 const  { clubs } = require('./utils/teams');
 const { runIngestion } = require('./utils/ingestion');
 
-// Allow requests from your frontend
-// app.use(cors({
-//     origin: 'http://your-frontend-domain.com' // Adjust to match your frontend domain
-// }))
+app.use(cors())
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
