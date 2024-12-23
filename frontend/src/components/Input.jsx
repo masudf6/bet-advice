@@ -7,7 +7,7 @@ import Loading from './Loading'
 import Datagrid from './Datagrid'
 // import CombinedOdds from './CombinedOdds'
 // import Fixture from './Fixture'
-const Fixture = React.lazy(() => import('./Fixture'))
+// const Fixture = React.lazy(() => import('./Fixture'))
 
 const Input = () => {
 
@@ -21,7 +21,7 @@ const Input = () => {
 
         setLoading(true)
 
-        const res = await axios.post('https://advice-odds-api.azurewebsites.net/api', {teams: teamInput})
+        const res = await axios.post('http://advice-odds-api.azurewebsites.net/api', {teams: teamInput})
         const fixture = res.data
 
         let new_session_data = []
